@@ -8,6 +8,8 @@
 int matrixA[MATRIX_SIZE][MATRIX_SIZE];
 int matrixB[MATRIX_SIZE][MATRIX_SIZE];
 int resultMatrix[MATRIX_SIZE][MATRIX_SIZE];
+int calculationCount = 0;
+pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
 typedef struct {
     int row;
@@ -18,7 +20,11 @@ void *multiply(void *arg) {
     thread_data_t *data = (thread_data_t *)arg;
 
     for (int i = 0; i < MATRIX_SIZE; i++) {
-        resultMatrix[data->row][data->col] += matrixA[data->row][i] * matrixB[i][data->col];
+        resultMatrix[data->row][data->col] += matrixA[data->row][i] * matrixB[i] * matrixB[i][data->col];
+
+	pthread_mutex_lock(&mutex);
+	calculationCount++;
+	pthread_mutex_unlock(&mutex);
     }
 
     pthread_exit(NULL);
@@ -63,6 +69,8 @@ int main() {
         }
         printf("\n");
     }
+
+    printf("Number of completed calculations: %d\n", calculationCount);
 
     return 0;
 }
