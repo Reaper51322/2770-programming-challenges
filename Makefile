@@ -1,16 +1,21 @@
 CC = gcc
 CFLAGS = -Wall -pthread
-SRCS = ThreadedMatrixMultiplication.c
+SRCS = ThreadedMatrixMultiply (2).c
 OBJS = $(SRCS:.c=.o)
-Target = ThreadedMatrixMultiplication
+TARGET = ThreadedMatrixMultiply
 
-all: &(TARGET)
+all: $(TARGET)
 
 $(TARGET): $(OBJS)
-    $(CC) $(CFLAGS) $(OBJS) -o $(TARGET)
+	$(CC) $(CFLAGS) $(OBJS) -o $(TARGET)
 
 %.o: %.c
-    $(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-    rm -f $(OBJS) $(TARGET)
+	rm -f $(OBJS) $(TARGET)
+
+.PHONY: debug
+debug:
+	@echo "Source files: $(SRCS)"
+	@echo "Object files: $(OBJS)"
